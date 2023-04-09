@@ -1,5 +1,5 @@
 public class Ip {
-    private int[] ip;
+    public int[] ip;
 
     public Ip(int a, int b, int c, int d) {
         this.ip = new int[4];
@@ -11,6 +11,10 @@ public class Ip {
 
     public Ip(int[] ip) {
         this.ip = ip;
+    }
+
+    public boolean equals(Ip other) {
+        return this.ip[0] == other.ip[0] && this.ip[1] == other.ip[1] && this.ip[2] == other.ip[2] && this.ip[3] == other.ip[3];
     }
 
     public String toString() {

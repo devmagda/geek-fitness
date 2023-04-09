@@ -4,27 +4,39 @@ import java.util.List;
 import java.util.Map;
 
 public class NettingService {
-    public static Map<String, Integer> binaryMap = new HashMap<>();
 
-    public static void load() {
-        for(int i = 0; i < 256; i++) {
-            binaryMap.put(Integer.toBinaryString(i), i);
+    public static Subnet fromIpAndCidr(Ip ip, int cidr) {
+        Subnet net = new Subnet();
+        net.setCidr(cidr);
+        net.setNetAddress(IpService.getNetworkAddressByIpAndCidr(ip, cidr));
+        net.setBroadcastAddress(IpService.getBroadcastByIpAndCidr(ip, cidr));
+        net.setNetSpace(getUsableIps(net));
+        return net;
+    }
+
+    public static Subnet generateNext(Subnet net) {
+        Ip broadcast = net.getBroadcastAddress();
+        Ip next = IpService.increment(broadcast, 1);
+        return fromIpAndCidr(next, net.getCidr());
+    }
+
+    public static List<Subnet> split(Subnet net) {
+        List<Subnet> nets = new ArrayList<>();
+        Ip networkAddress = net.getNetAddress();
+        Subnet net1 = fromIpAndCidr(networkAddress, net.getCidr() + 1);
+        Subnet net2 = generateNext(net1);
+        nets.add(net1);
+        nets.add(net2);
+        return nets;
+    }
+
+    private static List<Ip> getUsableIps(Subnet net) {
+        List<Ip> ips = new ArrayList<>();
+        Ip i = IpService.increment(net.getNetAddress(), 1);
+        while(!i.equals(net.getBroadcastAddress())) {
+            ips.add(i);
+            i = IpService.increment(i, 1);
         }
-    }
-
-    private static int fetchIntFromBinary(String binary) {
-        return binaryMap.get(binary);
-    }
-
-    public static Ip getBroadcastByCidr(int cidr) {
-        String binary = charTimesN('1', cidr) + charTimesN('1', 32-cidr);
-        return new Ip()
-    }
-    private static String charTimesN(char c, int n) {
-        String s = "";
-        for(int i = 0; i < n; i++) {
-            s += c;
-        }
-        return s;
+        return ips;
     }
 }
