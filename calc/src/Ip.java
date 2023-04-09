@@ -1,3 +1,7 @@
+/**
+ * Ip class holding for integers:
+ * 192.168.1.0 => ip[0].ip[1].ip[2].ip[3]
+ */
 public class Ip {
     public int[] ip;
 

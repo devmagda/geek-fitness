@@ -1,13 +1,28 @@
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This is the Subnet Class holding all information about the Subnet
+ */
 public class Subnet {
+    /**
+     * The Network Address
+     */
     private Ip netAddress;
-    private List<Ip> netSpace;
+    /**
+     * The list of usable IP's in the Subnet
+     */
+    private List<Subnet> netSpace;
+    /**
+     * The Broadcast Address
+     */
     private Ip broadcastAddress;
+    /**
+     * The CIDR
+     */
     private int cidr;
 
-    private Subnet(Ip netAddress, List<Ip> netSpace, Ip broadcastAddress, int cidr) {
+    private Subnet(Ip netAddress, List<Subnet> netSpace, Ip broadcastAddress, int cidr) {
         this.netAddress = netAddress;
         this.netSpace = netSpace;
         this.broadcastAddress = broadcastAddress;
@@ -18,7 +33,7 @@ public class Subnet {
     }
 
     private String netSpaceToString() {
-        return "{ " + netSpace.stream().map(i -> i.toString()).collect(Collectors.joining(" | ")) + " }";
+        return "{ " + netSpace.stream().map(s -> s.getNetAddress().toString()).collect(Collectors.joining(" | ")) + " }";
     }
 
     public String toString() {
@@ -37,7 +52,7 @@ public class Subnet {
         this.netAddress = netAddress;
     }
 
-    public void setNetSpace(List<Ip> netSpace) {
+    public void setNetSpace(List<Subnet> netSpace) {
         this.netSpace = netSpace;
     }
 
@@ -49,7 +64,7 @@ public class Subnet {
         return netAddress;
     }
 
-    public List<Ip> getNetSpace() {
+    public List<Subnet> getNetSpace() {
         return netSpace;
     }
 
